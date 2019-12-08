@@ -19,17 +19,24 @@ void affCh(p_data chain){
     }
 }
 
-
-p_data ajoutApres(DATATYPE uneval, p_data head){
-    p_data nouveau;
-    nouveau = (data*)malloc(sizeof(data));
-    nouveau->valeur = uneval;
-    nouveau->suiv = head->suiv;
-    head->suiv = nouveau;
-
-    return nouveau;
+p_data ajoutFin(DATATYPE val, p_data head){
+    p_data toAdd;
+    toAdd = (data*)malloc(sizeof(data));
+    toAdd->valeur = val;
+    toAdd->suiv = nullptr;
 
 
+    p_data tmp = head;
+
+    while((tmp->suiv) != nullptr){    //doesnt work without ()
+        tmp = tmp->suiv;
+
+    }
+
+    tmp->suiv = toAdd;
+    
+    return head;
+    
 
 }
 
@@ -49,21 +56,17 @@ p_data ajoutDevant(DATATYPE uneval, p_data chain){
 
 p_data saisieNombre(int nb){
     DATATYPE val;
-    cout << "valeur de head ?" << endl;
+    cout << "valeur ?" << endl;
     cin >> val;
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
+    head->suiv = nullptr;
 
     for(int i=1 ; i< nb ; i++){
         cout << "valeur?" << endl;
         cin >> val;
-       // head = ajoutApres(val,head);
-        for (int j=1; j<i;i++) {
-
-           head->suiv = 
-
-
-        }
+        head = ajoutFin(val, head);
+        
 
     }
     return head;
@@ -73,25 +76,29 @@ p_data saisieNombre(int nb){
 
 p_data saisieBorne(DATATYPE sentinelle){
     DATATYPE val;
-    cout << "valeur de head ?" << endl;
+    cout << "valeur?" << endl;
     cin >> val;
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
+    head->suiv = nullptr;
 
     while(val != sentinelle){
         cout << "valeur?" << endl;
         cin >> val;
-        ajoutApres(val,head);
+        head = ajoutFin(val, head);
+        
 
 
 
     }
+
+
     return head;
 }
 
 int nbCroissance(p_data chain){
     p_data tmp = chain;
-    int nbMonotonies = 0;
+    int nbMonotonies = 1;  //car si toutes les lettres du mot sont en ordre croissante, on aura une seul grande monotonie ex: mot = abcd, monotonie croissante =  abcd = 1
 
     while(tmp->suiv != nullptr){
 
@@ -113,10 +120,10 @@ int main(){
    p_data head;
    head = saisieNombre(10);
    affCh(head);
-   cout << "test" <<endl;
+  
    int cpt = nbCroissance(head);
-   cout << "test" <<endl;
-   cout << "nbmonotonies = " << cpt <<endl;
+
+   cout << endl << "nbmonotonies = " << cpt <<endl;
 
 
 
