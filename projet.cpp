@@ -56,17 +56,21 @@ p_data ajoutDevant(DATATYPE uneval, p_data chain){
 
 p_data saisieNombre(int nb){
     DATATYPE val;
-    cout << "valeur ?" << endl;
+    cout << "valeur de head ?" << endl;
     cin >> val;
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
-    head->suiv = nullptr;
 
-    for(int i=1 ; i< nb ; i++){
+    p_data tmp = head; // pour ne pas modifier le head
+
+    for(int i=2 ; i<= nb ; i++){ // commence par la deuxieme valeur
         cout << "valeur?" << endl;
         cin >> val;
-        head = ajoutFin(val, head);
-        
+
+        tmp->suiv = (data*)malloc(sizeof(data)); 
+        tmp->suiv->valeur = val; 
+
+        tmp = tmp->suiv; 
 
     }
     return head;
@@ -76,23 +80,23 @@ p_data saisieNombre(int nb){
 
 p_data saisieBorne(DATATYPE sentinelle){
     DATATYPE val;
-    cout << "valeur?" << endl;
+    cout << "valeur de head ?" << endl;
     cin >> val;
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
-    head->suiv = nullptr;
+
+    p_data tmp = head; // pour ne pas modifier le head
 
     while(val != sentinelle){
         cout << "valeur?" << endl;
         cin >> val;
-        head = ajoutFin(val, head);
         
+        tmp->suiv = (data*)malloc(sizeof(data)); 
+        tmp->suiv->valeur = val; 
 
-
+        tmp = tmp->suiv; 
 
     }
-
-
     return head;
 }
 
