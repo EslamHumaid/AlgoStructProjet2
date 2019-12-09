@@ -2,7 +2,7 @@
 using namespace std;
 
 
-typedef string DATATYPE;
+typedef char DATATYPE;
 
 typedef struct _datum{
     DATATYPE valeur;
@@ -193,7 +193,7 @@ int main(){
 //------test extraireCroissance(p_data & chain, p_data & mono) ----- 
 
 p_data mono = (data*)malloc(sizeof(data)); 
-mono->valeur="ah"; 
+mono->valeur='a'; 
 mono->suiv=nullptr; 
 
 extraireCroissance(head,mono);
