@@ -148,12 +148,63 @@ void removeFirstEle(p_data & chain) { // remove first element of a chaine & retu
 
 p_data clone(p_data chain) { 
 
-    p_data tmp = (data*)malloc(sizeof(data)); ; 
+    p_data tmp = (data*)malloc(sizeof(data));
     tmp->valeur = chain->valeur; 
     tmp->suiv = chain->suiv; 
 
     return tmp;
 }
+/**
+ * @algo: take an element from chain sec, then put it in the right place at chain pre.
+ *        repreat the process for another element until chain sec's elements ends. 
+**/
+
+
+/////TOFIX
+ p_data fusion(p_data prem, p_data sec) { 
+
+    p_data newHead; 
+    p_data tmpPrem = prem;
+    p_data tmpSec = sec; 
+    p_data cptSec = sec;
+    p_data cptPrem = prem;
+    p_data preChaine = (data*)malloc(sizeof(data));
+
+        if (sec->valeur <= prem->valeur) { // determine newHead
+            newHead = sec;
+        } else {
+            newHead = prem;
+        }
+        
+    while (cptSec != NULL ) { 
+            
+            bool ok = true;
+
+            while (cptPrem != NULL && ok ) { 
+
+                    if ((tmpSec->valeur <= tmpPrem->valeur)) { 
+                            
+                    tmpPrem = ajoutDevant((tmpSec->valeur),tmpPrem);
+                   
+                   ok = false; 
+
+                    } else { 
+                    
+                    tmpPrem = tmpPrem->suiv; 
+                    cptPrem = cptPrem->suiv;
+
+                    }
+                }
+
+        cptPrem = tmpPrem; 
+        cptSec = cptSec->suiv; 
+
+            }         
+     
+    return tmpPrem; 
+
+}
+
 
 //////////////TOFIX//////////////////
 void extraireCroissance(p_data & chain, p_data & mono) {
@@ -181,7 +232,7 @@ void extraireCroissance(p_data & chain, p_data & mono) {
 
 //------------------------------------------
 int main(){
-   p_data head;
+ /*  p_data head;
    head = saisieNombre(3);
    affCh(head);
   
@@ -200,5 +251,26 @@ extraireCroissance(head,mono);
 affCh(mono);
 cout << "..." << endl;
 affCh(head);
+*/
+
+//------test p_data fusion(p_data prem, p_data sec) -----
+
+p_data pre = saisieNombre(3); // first chain
+p_data sec = saisieNombre(3); // second one 
+
+cout << "first chain " << endl; 
+affCh(pre); 
+cout << " " << endl; 
+cout << "second chain " << endl; 
+affCh(sec);
+cout << " " << endl; 
+cout << "fusion is in process..." << endl; 
+
+pre = fusion(pre,sec); 
+
+cout << "fusion done ! " << endl; 
+
+affCh(pre); 
+
 
 }
