@@ -161,7 +161,7 @@ p_data clone(p_data chain) {
 
 
 /////TOFIX
- p_data fusion(p_data prem, p_data sec) { 
+p_data fusion(p_data prem, p_data sec) { 
 
     p_data newHead; 
     p_data tmpPrem = prem;
@@ -170,40 +170,82 @@ p_data clone(p_data chain) {
     p_data cptPrem = prem;
     p_data preChaine = (data*)malloc(sizeof(data));
 
-        if (sec->valeur <= prem->valeur) { // determine newHead
-            newHead = sec;
-        } else {
-            newHead = prem;
-        }
+    if (sec->valeur <= prem->valeur) { // determine newHead
+        newHead = sec;
+    } else {
+        newHead = prem;
+    }
         
     while (cptSec != NULL ) { 
             
-            bool ok = true;
+        bool ok = true;
 
-            while (cptPrem != NULL && ok ) { 
+        while (cptPrem != NULL && ok ) { 
 
-                    if ((tmpSec->valeur <= tmpPrem->valeur)) { 
+            if ((tmpSec->valeur <= tmpPrem->valeur)) { 
                             
-                    tmpPrem = ajoutDevant((tmpSec->valeur),tmpPrem);
+              tmpPrem = ajoutDevant((tmpSec->valeur),tmpPrem);
                    
-                   ok = false; 
+              ok = false; 
 
-                    } else { 
+            } else { 
                     
-                    tmpPrem = tmpPrem->suiv; 
-                    cptPrem = cptPrem->suiv;
+              tmpPrem = tmpPrem->suiv; 
+              cptPrem = cptPrem->suiv;
 
-                    }
-                }
+            }
+        }
 
         cptPrem = tmpPrem; 
         cptSec = cptSec->suiv; 
 
-            }         
+    }         
      
     return tmpPrem; 
 
 }
+
+p_data fusionV2(p_data prem, p_data sec) { 
+
+    p_data newHead = prem; 
+    p_data tmpPrem = prem;
+    p_data tmpSec = sec; 
+
+
+
+
+        
+    while (tmpSec != nullptr ) { 
+            
+        bool ok = true;
+        tmpPrem = prem;
+
+        while (tmpPrem != nullptr && ok ) { 
+
+            if ((tmpSec->valeur <= tmpPrem->valeur)) { 
+                            
+              newHead = ajoutDevant((tmpSec->valeur),tmpPrem);  //TOFIX
+                   
+              ok = false; 
+
+            } else { 
+                    
+              tmpPrem = tmpPrem->suiv; 
+              
+
+            }
+        }
+
+        
+        tmpSec = tmpSec->suiv; 
+
+    }         
+     
+    return newHead; 
+
+}
+
+
 
 
 //////////////TOFIX//////////////////
@@ -266,7 +308,7 @@ affCh(sec);
 cout << " " << endl; 
 cout << "fusion is in process..." << endl; 
 
-pre = fusion(pre,sec); 
+pre = fusionV2(pre,sec); 
 
 cout << "fusion done ! " << endl; 
 
