@@ -80,6 +80,7 @@ p_data saisieNombre(int nb){
     cin >> val;
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
+    head->suiv = nullptr; 
 
     p_data tmp = head; // pour ne pas modifier le head
 
@@ -156,99 +157,63 @@ p_data clone(p_data chain) {
 }
 /**
  * @algo: take an element from chain sec, then put it in the right place at chain pre.
- *        repreat the process for another element until chain sec's elements ends. 
+ *        repreat the process for another element until chain sec's elements end. 
+ * 
 **/
 
-
-/////TOFIX
 p_data fusion(p_data prem, p_data sec) { 
 
-    p_data newHead; 
+    p_data restChain=sec; // variable conserve the chain after links are moved
     p_data tmpPrem = prem;
     p_data tmpSec = sec; 
-    p_data cptSec = sec;
-    p_data cptPrem = prem;
-    p_data preChaine = (data*)malloc(sizeof(data));
-
-    if (sec->valeur <= prem->valeur) { // determine newHead
-        newHead = sec;
-    } else {
-        newHead = prem;
-    }
-        
-    while (cptSec != NULL ) { 
-            
-        bool ok = true;
-
-        while (cptPrem != NULL && ok ) { 
-
-            if ((tmpSec->valeur <= tmpPrem->valeur)) { 
-                            
-              tmpPrem = ajoutDevant((tmpSec->valeur),tmpPrem);
-                   
-              ok = false; 
-
-            } else { 
-                    
-              tmpPrem = tmpPrem->suiv; 
-              cptPrem = cptPrem->suiv;
-
-            }
-        }
-
-        cptPrem = tmpPrem; 
-        cptSec = cptSec->suiv; 
-
-    }         
-     
-    return tmpPrem; 
-
-}
-
-p_data fusionV2(p_data prem, p_data sec) { 
-
-    p_data newHead = prem; 
-    p_data tmpPrem = prem;
-    p_data tmpSec = sec; 
-
-
-
-
-        
-    while (tmpSec != nullptr ) { 
+   
+    
+    while (restChain != nullptr ) { 
             
         bool ok = true;
         tmpPrem = prem;
+        tmpSec = restChain;
 
-        while (tmpPrem != nullptr && ok ) { 
+       while (tmpPrem != nullptr && ok ) { 
 
-            if ((tmpSec->valeur <= tmpPrem->valeur)) { 
-                            
-              newHead = ajoutDevant((tmpSec->valeur),tmpPrem);  //TOFIX
-                   
-              ok = false; 
+            if (((tmpPrem->suiv)==nullptr))  { // add to the end
+
+                tmpPrem->suiv = tmpSec; 
+                restChain = tmpSec->suiv;
+                tmpSec->suiv = nullptr;
+                ok = false; 
+
+              // add in between  
+            } else if ((tmpSec->valeur >= tmpPrem->valeur) && ((tmpSec->valeur <= (tmpPrem->suiv)->valeur))){ 
+
+                restChain = tmpSec->suiv;
+                tmpSec->suiv = tmpPrem->suiv;
+                tmpPrem->suiv = tmpSec;
+                ok = false; 
+                // add at the beggining 
+            } else if ((tmpSec->valeur <= tmpPrem->valeur) && ((tmpSec->valeur <= (tmpPrem->suiv)->valeur)) ) { 
+
+               restChain = tmpSec->suiv;
+                tmpSec->suiv = tmpPrem;
+                prem = tmpSec;
+                ok = false;   
+                
 
             } else { 
-                    
-              tmpPrem = tmpPrem->suiv; 
-              
+                
+                tmpPrem = tmpPrem->suiv;
 
             }
+            
         }
-
-        
-        tmpSec = tmpSec->suiv; 
-
+ 
     }         
      
-    return newHead; 
+    return prem; 
 
 }
 
-
-
-
-//////////////TOFIX//////////////////
+//////////////TOFIX////////////////// does not work for string
 void extraireCroissance(p_data & chain, p_data & mono) {
 
     p_data tmp = clone(chain); // copy "valeur" and "suiv" of the head
@@ -308,7 +273,7 @@ affCh(sec);
 cout << " " << endl; 
 cout << "fusion is in process..." << endl; 
 
-pre = fusionV2(pre,sec); 
+pre = fusion(pre,sec); 
 
 cout << "fusion done ! " << endl; 
 
