@@ -17,9 +17,13 @@ void affCh(p_data chain){
         cout << tmp->valeur;
         tmp = tmp->suiv;
     }
+    cout << "" << endl;
 }
 
 p_data ajoutFin(DATATYPE val, p_data head){
+
+    
+  
     p_data toAdd;
     toAdd = (data*)malloc(sizeof(data));
     toAdd->valeur = val;
@@ -27,6 +31,8 @@ p_data ajoutFin(DATATYPE val, p_data head){
 
 
     p_data tmp = head;
+
+    
 
     while((tmp->suiv) != nullptr){    //doesnt work without ()
         tmp = tmp->suiv;
@@ -90,6 +96,7 @@ p_data saisieNombre(int nb){
 
         tmp->suiv = (data*)malloc(sizeof(data)); 
         tmp->suiv->valeur = val; 
+        tmp->suiv->suiv = nullptr;
 
         tmp = tmp->suiv; 
 
@@ -114,6 +121,7 @@ p_data saisieBorne(DATATYPE sentinelle){
         
         tmp->suiv = (data*)malloc(sizeof(data)); 
         tmp->suiv->valeur = val; 
+        tmp->suiv->suiv = nullptr;
 
         tmp = tmp->suiv; 
 
@@ -191,7 +199,7 @@ p_data fusion(p_data prem, p_data sec) {
                 tmpPrem->suiv = tmpSec;
                 ok = false; 
                 // add at the beggining 
-            } else if ((tmpSec->valeur <= tmpPrem->valeur) && ((tmpSec->valeur <= (tmpPrem->suiv)->valeur)) ) { 
+            } else if ((tmpSec->valeur <= tmpPrem->valeur)) { 
 
                restChain = tmpSec->suiv;
                 tmpSec->suiv = tmpPrem;
@@ -213,23 +221,30 @@ p_data fusion(p_data prem, p_data sec) {
 
 }
 
-//////////////TOFIX////////////////// does not work for string
+//////////////TOFIX////////////////// does not work for string//
+//mono should have a value
 void extraireCroissance(p_data & chain, p_data & mono) {
 
     p_data tmp = clone(chain); // copy "valeur" and "suiv" of the head
+    
     ajoutFin((tmp->valeur),mono);  // first element of the chaine will always be added to mono
+    
     removeFirstEle(chain); // remove the head, second element in the chaine becomes the new head
 
     while( ( (tmp->suiv) != nullptr) && ((tmp->valeur) < (chain->valeur) ) ) { // to extract the first monotonie
 
-        cout << (tmp->valeur) << " <  " << chain->valeur << endl;
+       
         
         ajoutFin(chain->valeur,mono); //TOFIX
         tmp = clone(chain); //TOFIX
 
         removeFirstEle(chain);
 
-        (tmp->suiv) = nullptr;
+        
+
+        
+
+        
         
     }
 
@@ -239,17 +254,26 @@ void extraireCroissance(p_data & chain, p_data & mono) {
 
 //------------------------------------------
 int main(){
- /*  p_data head;
-   head = saisieNombre(3);
+   p_data head;
+   head = saisieNombre(5);
+   affCh(head);
+
+   p_data mono = new data; 
+   mono->valeur = "a";
+   mono->suiv = nullptr;
+
+   extraireCroissance(head, mono);
+   
+   affCh(mono);
    affCh(head);
   
-   int cpt = nbCroissance(head);
+//    int cpt = nbCroissance(head);
 
-   cout << endl << "nbmonotonies = " << cpt <<endl;
+//    cout << endl << "nbmonotonies = " << cpt <<endl;
 
 
 //------test extraireCroissance(p_data & chain, p_data & mono) ----- 
-
+/*
 p_data mono = (data*)malloc(sizeof(data)); 
 mono->valeur='a'; 
 mono->suiv=nullptr; 
@@ -262,22 +286,25 @@ affCh(head);
 
 //------test p_data fusion(p_data prem, p_data sec) -----
 
-p_data pre = saisieNombre(3); // first chain
-p_data sec = saisieNombre(3); // second one 
+// p_data pre = saisieNombre(3); // first chain
+// p_data sec = saisieNombre(3); // second one 
 
-cout << "first chain " << endl; 
-affCh(pre); 
-cout << " " << endl; 
-cout << "second chain " << endl; 
-affCh(sec);
-cout << " " << endl; 
-cout << "fusion is in process..." << endl; 
+// cout << "first chain " << endl; 
+// affCh(pre); 
+// cout << " " << endl; 
+// cout << "second chain " << endl; 
+// affCh(sec);
+// cout << " " << endl; 
+// cout << "fusion is in process..." << endl; 
 
-pre = fusion(pre,sec); 
+// pre = fusion(pre,sec); 
 
-cout << "fusion done ! " << endl; 
+// cout << "fusion done ! " << endl; 
 
-affCh(pre); 
+// affCh(pre); 
+
+
+
 
 
 }
