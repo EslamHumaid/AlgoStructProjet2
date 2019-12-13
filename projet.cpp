@@ -310,8 +310,8 @@ void affT(datalistes mono){
 }
 
 /**
-* @algo: delete has done by shifting elements
-* @PRE: capa > nbmono (not all cases are used to be able to shift)
+* @algo: delete has done by assigning to NULL (malloc intialise to NULL)
+* @PRE: 
 *  @POST:
 **/
 p_data suppressionFin(datalistes & mono) {
@@ -323,10 +323,10 @@ p_data suppressionFin(datalistes & mono) {
     return lastEle; 
 
 }
-// misleading name of a function, it's forming a chainage not deleting them from the tableau 
+// misleading name of a function, it's forming a chain not deleting them from the tableau 
 
 /**
- * @algo: associate first elem with the second one then second with third...n with n+1, so it's nbmono-1 turns
+ * @algo: associate first elem with the second one then second with third...n with n+1, so it's nbmono-2 turns
  * @PRE:
  * @POST:
  * */
@@ -396,8 +396,8 @@ cout << "fusion done ! " << endl;
 affCh(pre); 
 */
 //---- test Monotonies --- 
-datalistes t1 = initT(4); 
-p_data chn1 = saisieNombre(1); // first chain
+datalistes t1 = initT(4); // new tableau mono
+p_data chn1 = saisieNombre(1); // first element of tableau
 p_data chn2 = saisieNombre(1); // second one 
 p_data chn3 = saisieNombre(1); // third one
 cout << "add first element to table..." << endl;
@@ -407,7 +407,7 @@ ajouterFin(chn2,t1);
 cout << "add third element to table..." << endl;
 ajouterFin(chn3,t1);
 
-cout << "display t1" << endl; 
+cout << "display tableau mono" << endl; 
 affT(t1);
 
 cout << "delete last element..." << endl; 
