@@ -319,6 +319,7 @@ p_data suppressionFin(datalistes & mono) {
     p_data lastEle = mono.monotonies[indexeLastEle]; 
 
     mono.monotonies[indexeLastEle] = NULL; // malloc intialise to NULL
+    mono.nbmono--;
 
     return lastEle; 
 
@@ -330,7 +331,7 @@ p_data suppressionFin(datalistes & mono) {
  * @PRE:
  * @POST:
  * */
-p_data suppressionTotale(datalistes & mono) {
+p_data suppressionTotaleV2(datalistes & mono) {
 
 p_data Head = mono.monotonies[0]; // first element
 
@@ -341,6 +342,94 @@ p_data Head = mono.monotonies[0]; // first element
     }
 
     return Head; 
+
+}
+p_data suppressionTotale(datalistes & mono) {   //working as intended
+
+    p_data tmp;
+    p_data chain;
+    for (int i=1;i<(mono.nbmono);i++) { 
+
+        tmp = mono.monotonies[0];
+        while(tmp->suiv != nullptr){
+            tmp = tmp->suiv;
+        }
+
+        tmp->suiv = mono.monotonies[i];
+
+
+    }
+
+    chain = mono.monotonies[0];
+
+    for(int i = 0 ; i < mono.nbmono; i++){       //remove the elements from mono
+        mono.monotonies[i] = nullptr;
+
+    }
+
+    return chain; 
+
+}
+
+
+//fonctions belonging to Fusion multiple part
+
+
+/**
+ * @algo: return a tableau with the cases filled with the monotonies of chain
+ * @PRE:
+ * @POST:
+ * */
+datalistes separation(p_data & chain){
+    int nbCases = nbCroissance(chain);
+    datalistes tab = initT(nbCases);
+    
+
+    //initialising the tab cases     TOFIX
+    for(int j = 0 ; j < nbCases ; j++ ){
+        tab.monotonies[j] = new data;
+        tab.monotonies[j]->valeur = '\0';
+        tab.monotonies[j]->suiv = nullptr;
+    }
+
+    for(int i = 0 ; i < nbCases ; i++ ){
+        
+        extraireCroissance(chain, tab.monotonies[i]);
+        tab.nbmono++;
+    }
+
+    return tab;
+
+}
+
+
+/**
+ * @algo: put the fusion of all elements of a tab in the first case orderd by croissant order
+ * @PRE:
+ * @POST:
+ * */
+void trier(datalistes & tabmono){
+
+    for(int i = 1 ; i < (tabmono.nbmono); i++){
+        tabmono.monotonies[0] = fusion(tabmono.monotonies[0], tabmono.monotonies[i]);
+
+    }
+
+    tabmono.nbmono = 1;
+}
+
+
+/**
+ * @algo: return the chain order by croissant order
+ * @PRE:
+ * @POST:
+ * */
+void trierCh(p_data & chain){
+    cout << "separating monotonies..." << endl;
+    datalistes tab = separation(chain);
+    cout << "arranging the tab..." << endl;
+    trier(tab);
+    chain = suppressionTotale(tab);
 
 }
 
@@ -396,30 +485,46 @@ cout << "fusion done ! " << endl;
 affCh(pre); 
 */
 //---- test Monotonies --- 
-datalistes t1 = initT(4); // new tableau mono
-p_data chn1 = saisieNombre(1); // first element of tableau
-p_data chn2 = saisieNombre(1); // second one 
-p_data chn3 = saisieNombre(1); // third one
-cout << "add first element to table..." << endl;
-ajouterFin(chn1,t1);
-cout << "add second element to table..." << endl;
-ajouterFin(chn2,t1);
-cout << "add third element to table..." << endl;
-ajouterFin(chn3,t1);
+// datalistes t1 = initT(4); // new tableau mono
+// p_data chn1 = saisieNombre(3); // first element of tableau
+// p_data chn2 = saisieNombre(2); // second one 
+// p_data chn3 = saisieNombre(2); // third one
+// cout << "add first element to table..." << endl;
+// ajouterFin(chn1,t1);
+// cout << "add second element to table..." << endl;
+// ajouterFin(chn2,t1);
+// cout << "add third element to table..." << endl;
+// ajouterFin(chn3,t1);
 
-cout << "display tableau mono" << endl; 
-affT(t1);
+// cout << "display tableau mono" << endl; 
+// affT(t1);
 
-cout << "delete last element..." << endl; 
-p_data lastEle =  suppressionFin(t1); 
-cout << "display without the last element:" << endl; 
-affT(t1);
-cout << "display the last element:" << endl;
-affCh(lastEle);
-cout << "form complet chain..." << endl;
-p_data total = suppressionTotale(t1); 
+// cout << "delete last element..." << endl; 
+// p_data lastEle =  suppressionFin(t1); 
+// cout << "display without the last element:" << endl; 
+// affT(t1);
+// cout << "display the last element:" << endl;
+// affCh(lastEle);
+// cout << "form complet chain..." << endl;
+// p_data total = suppressionTotale(t1); 
 
-cout << "done! the chain:" << endl;
-affCh(total); 
+// cout << "done! the chain:" << endl;
+// affCh(total); 
+
+// cout << "display tableau mono" << endl; 
+// affT(t1);
+
+p_data chain = saisieNombre(10);
+cout << "chain : " << endl;
+affCh(chain);
+// datalistes tab = separation(chain);
+// cout << "monotonies : " << endl;
+// affT(tab);
+// trier(tab);
+// cout << "chain orderd : " << endl;
+// affT(tab);
+trierCh(chain);
+cout << "the orderd chain :" << endl;
+affCh(chain);
 
 }
