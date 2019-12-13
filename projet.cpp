@@ -1,15 +1,33 @@
 #include<iostream>
 using namespace std;
 
+/******* constants & structs ******/
+
 
 typedef char DATATYPE;
 
+//Chaînage
 typedef struct _datum{
     DATATYPE valeur;
     _datum * suiv;
 } data ;
 
 typedef data * p_data;
+
+
+
+//Monotonies
+typedef struct _datallst {
+    int capa ;
+    int nbmono ;
+    p_data * monotonies ;
+
+} datalistes ;
+
+/*******************************/
+
+
+/*** function belong to Chaînage ***/
 
 void affCh(p_data chain){
     p_data tmp = chain;
@@ -251,10 +269,85 @@ void extraireCroissance(p_data & chain, p_data & mono) {
 
 }
 
+/*** function belong to Monotonies ***/
+
+datalistes initT(int nb) {
+
+    datalistes newList;
+
+    newList.capa = nb; // nb cases of tableau(used or no) = capa
+
+    newList.nbmono = 0; // nb used cases is zero; 
+
+    newList.monotonies = (p_data*)malloc(nb*sizeof(p_data)); // table contains pointers, so it's pointer toward pointers, (cf.exo3 tableaux dynamique)
+
+    return newList;
+}
+/**
+* @algo: go to the last unused case whose indixe is nbmono (not (nbmono-1) cuz idixes here start with 0), then put chain in it.
+* @PRE:
+* @POST:
+**/
+void ajouterFin(p_data chain,datalistes & mono) {
+
+    mono.monotonies[mono.nbmono] = chain; 
+
+    mono.nbmono++; 
+
+
+}
+
+// each line represent a case
+void affT(datalistes mono){
+
+    for (int i=0;i<mono.nbmono;i++) {
+
+        affCh(mono.monotonies[i]);
+         
+
+    }
+
+}
+
+/**
+* @algo: delete has done by shifting elements
+* @PRE: capa > nbmono (not all cases are used to be able to shift)
+*  @POST:
+**/
+p_data suppressionFin(datalistes & mono) {
+    int indexeLastEle = mono.nbmono-1;
+    p_data lastEle = mono.monotonies[indexeLastEle]; 
+
+    mono.monotonies[indexeLastEle] = NULL; // malloc intialise to NULL
+
+    return lastEle; 
+
+}
+// misleading name of a function, it's forming a chainage not deleting them from the tableau 
+
+/**
+ * @algo: associate first elem with the second one then second with third...n with n+1, so it's nbmono-1 turns
+ * @PRE:
+ * @POST:
+ * */
+p_data suppressionTotale(datalistes & mono) {
+
+p_data Head = mono.monotonies[0]; // first element
+
+    for (int i=0;i<(mono.nbmono-1);i++) { 
+
+        mono.monotonies[i]->suiv = mono.monotonies[i+1];
+
+    }
+
+    return Head; 
+
+}
+
 
 //------------------------------------------
 int main(){
-   p_data head;
+ /*  p_data head;
    head = saisieNombre(5);
    affCh(head);
 
@@ -267,10 +360,10 @@ int main(){
    affCh(mono);
    affCh(head);
   
-//    int cpt = nbCroissance(head);
+int cpt = nbCroissance(head);
 
-//    cout << endl << "nbmonotonies = " << cpt <<endl;
-
+cout << endl << "nbmonotonies = " << cpt <<endl;
+*/
 
 //------test extraireCroissance(p_data & chain, p_data & mono) ----- 
 /*
@@ -282,29 +375,51 @@ extraireCroissance(head,mono);
 affCh(mono);
 cout << "..." << endl;
 affCh(head);
+
 */
-
 //------test p_data fusion(p_data prem, p_data sec) -----
+/*
+p_data pre = saisieNombre(3); // first chain
+p_data sec = saisieNombre(3); // second one 
 
-// p_data pre = saisieNombre(3); // first chain
-// p_data sec = saisieNombre(3); // second one 
+cout << "first chain " << endl; 
+affCh(pre); 
+cout << " " << endl; 
+cout << "second chain " << endl; 
+affCh(sec);
+cout << " " << endl; 
+cout << "fusion is in process..." << endl; 
 
-// cout << "first chain " << endl; 
-// affCh(pre); 
-// cout << " " << endl; 
-// cout << "second chain " << endl; 
-// affCh(sec);
-// cout << " " << endl; 
-// cout << "fusion is in process..." << endl; 
+pre = fusion(pre,sec); 
 
-// pre = fusion(pre,sec); 
+cout << "fusion done ! " << endl; 
+affCh(pre); 
+*/
+//---- test Monotonies --- 
+datalistes t1 = initT(4); 
+p_data chn1 = saisieNombre(1); // first chain
+p_data chn2 = saisieNombre(1); // second one 
+p_data chn3 = saisieNombre(1); // third one
+cout << "add first element to table..." << endl;
+ajouterFin(chn1,t1);
+cout << "add second element to table..." << endl;
+ajouterFin(chn2,t1);
+cout << "add third element to table..." << endl;
+ajouterFin(chn3,t1);
 
-// cout << "fusion done ! " << endl; 
+cout << "display t1" << endl; 
+affT(t1);
 
-// affCh(pre); 
+cout << "delete last element..." << endl; 
+p_data lastEle =  suppressionFin(t1); 
+cout << "display without the last element:" << endl; 
+affT(t1);
+cout << "display the last element:" << endl;
+affCh(lastEle);
+cout << "form complet chain..." << endl;
+p_data total = suppressionTotale(t1); 
 
-
-
-
+cout << "done! the chain:" << endl;
+affCh(total); 
 
 }
