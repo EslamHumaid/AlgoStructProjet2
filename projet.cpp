@@ -38,7 +38,7 @@ void affCh(p_data chain){
     cout << "" << endl;
 }
 
-p_data ajoutFin(DATATYPE val, p_data head){
+void ajoutFin(DATATYPE val, p_data & head){
 
     
   
@@ -51,7 +51,7 @@ p_data ajoutFin(DATATYPE val, p_data head){
 
     if (head==nullptr) {
 
-        return toAdd; 
+        head = toAdd; 
 
     } else { 
 
@@ -63,7 +63,7 @@ p_data ajoutFin(DATATYPE val, p_data head){
 
         tmp->suiv = toAdd;
         
-        return head;
+        
     }   
 
 }
@@ -285,6 +285,12 @@ datalistes initT(int nb) {
 
     newList.monotonies = (p_data*)malloc(nb*sizeof(p_data)); // table contains pointers, so it's pointer toward pointers, (cf.exo3 tableaux dynamique)
 
+    //initialising the tab cases     
+    for(int j = 0 ; j < newList.capa ; j++ ){
+        newList.monotonies[j] = nullptr;
+    }
+    
+    
     return newList;
 }
 /**
@@ -368,6 +374,7 @@ p_data suppressionTotale(datalistes & mono) {   //working as intended
 
     for(int i = 0 ; i < mono.nbmono; i++){       //remove the elements from mono
         mono.monotonies[i] = nullptr;
+        mono.nbmono--;
 
     }
 
@@ -389,12 +396,7 @@ datalistes separation(p_data & chain){
     datalistes tab = initT(nbCases);
     
 
-    //initialising the tab cases     TOFIX
-    for(int j = 0 ; j < nbCases ; j++ ){
-        tab.monotonies[j] = new data;
-        tab.monotonies[j]->valeur = '\0';
-        tab.monotonies[j]->suiv = nullptr;
-    }
+
 
     for(int i = 0 ; i < nbCases ; i++ ){
         
@@ -518,22 +520,22 @@ affCh(pre);
 // cout << "display tableau mono" << endl; 
 // affT(t1);
 
-// p_data chain = saisieNombre(10);
-// cout << "chain : " << endl;
-// affCh(chain);
+p_data chain = saisieNombre(10);
+cout << "chain : " << endl;
+affCh(chain);
 // datalistes tab = separation(chain);
 // cout << "monotonies : " << endl;
 // affT(tab);
 // trier(tab);
 // cout << "chain orderd : " << endl;
 // affT(tab);
-// trierCh(chain);
-// cout << "the orderd chain :" << endl;
-// affCh(chain);
+trierCh(chain);
+cout << "the orderd chain :" << endl;
+affCh(chain);
 
-p_data head;
+// p_data head = nullptr;
 
-head = ajoutFin('a',head);
+// head = ajoutFin('a',head);
 
-affCh(head); 
+// affCh(head); 
 }
