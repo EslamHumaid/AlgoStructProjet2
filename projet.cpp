@@ -48,19 +48,23 @@ p_data ajoutFin(DATATYPE val, p_data head){
     toAdd->suiv = nullptr;
 
 
-    p_data tmp = head;
 
-    
+    if (head==nullptr) {
 
-    while((tmp->suiv) != nullptr){    //doesnt work without ()
-        tmp = tmp->suiv;
+        return toAdd; 
 
-    }
+    } else { 
 
-    tmp->suiv = toAdd;
-    
-    return head;
-    
+        p_data tmp = head;
+
+        while((tmp->suiv) != nullptr){    //doesnt work without ()
+            tmp = tmp->suiv;
+        }
+
+        tmp->suiv = toAdd;
+        
+        return head;
+    }   
 
 }
 
@@ -514,17 +518,22 @@ affCh(pre);
 // cout << "display tableau mono" << endl; 
 // affT(t1);
 
-p_data chain = saisieNombre(10);
-cout << "chain : " << endl;
-affCh(chain);
+// p_data chain = saisieNombre(10);
+// cout << "chain : " << endl;
+// affCh(chain);
 // datalistes tab = separation(chain);
 // cout << "monotonies : " << endl;
 // affT(tab);
 // trier(tab);
 // cout << "chain orderd : " << endl;
 // affT(tab);
-trierCh(chain);
-cout << "the orderd chain :" << endl;
-affCh(chain);
+// trierCh(chain);
+// cout << "the orderd chain :" << endl;
+// affCh(chain);
 
+p_data head;
+
+head = ajoutFin('a',head);
+
+affCh(head); 
 }
