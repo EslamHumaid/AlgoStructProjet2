@@ -278,6 +278,63 @@ p_data fusion(p_data prem, p_data sec) {
 
 }
 
+
+p_data fusion_aux(p_data prem, p_data sec, p_data tmpPrem) { 
+ 
+   if (sec==nullptr) { 
+
+       return prem; 
+
+   } else { 
+
+        if (((tmpPrem->suiv)==nullptr)) {
+
+            tmpPrem->suiv = sec; 
+            p_data restChain = sec->suiv;
+            sec->suiv = nullptr;
+
+            return fusion_aux(prem,restChain,tmpPrem); 
+
+        } else if ((sec->valeur >= tmpPrem->valeur) && ((sec->valeur <= (tmpPrem->suiv)->valeur))) {
+
+            p_data restChain = sec->suiv;
+            sec->suiv = tmpPrem->suiv;
+            tmpPrem->suiv = sec;
+
+            fusion_aux(prem,restChain,tmpPrem);
+
+        } else if ((sec->valeur <= prem->valeur)) { 
+
+            p_data restChain = sec->suiv;
+            sec->suiv = tmpPrem;
+            prem = sec;
+
+            fusion_aux(prem,restChain,tmpPrem);
+
+        }  else { 
+
+            fusion_aux(prem,sec,tmpPrem->suiv); 
+
+        }     
+
+
+    }
+   
+}
+
+/**
+ * @b Role: une fonction fusion de type recursive
+ * @param: les tetes des deux chainages.
+**/
+p_data fusion_rec(p_data prem, p_data sec) { 
+
+    p_data tmpPrem = prem; 
+
+return fusion_aux(prem,sec,tmpPrem);
+
+}
+
+
 /**
  * @b Role : placer dans le chaînage mono la première monotonie croissante de chain et l’en retire
  * @param : les tetes des deux chainages. celui de mono et de chain.
