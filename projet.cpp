@@ -49,13 +49,14 @@ void affCh(p_data chain){
         cout << tmp->valeur;
         tmp = tmp->suiv;
     }
-    cout << "" << endl;
+    cout << "" << endl; //pour terminer la ligne
 }
 
 
 /**
  * @b Role : crée un nouveau maillon avec la valeur val et l'ajoute a la fin du chainage. 
  * @param : valeur a ajouter, la tete d'un chainage.
+ * @pre : la tete doit etre initialise avec une valeur ou nullptr
 **/
 void ajoutFin(DATATYPE val, p_data & head){
 
@@ -145,7 +146,7 @@ p_data saisieNombre(int nb){
 p_data saisieBorne(DATATYPE sentinelle){
 
     DATATYPE val;
-    cout << "valeur de head ?" << endl;
+    cout << "Entrez la valeur?" << endl;
     cin >> val; // entrer premiere valeur qui represente la tete. 
     p_data head = (data*)malloc(sizeof(data)); 
     head->valeur = val;
@@ -153,7 +154,7 @@ p_data saisieBorne(DATATYPE sentinelle){
     p_data tmp = head; // pour ne pas modifier le head
 
     while(val != sentinelle){
-        cout << "valeur?" << endl;
+        cout << "Entrez la valeur?" << endl;
         cin >> val; // l'element a ajouter
         
         tmp->suiv = (data*)malloc(sizeof(data)); 
@@ -169,7 +170,7 @@ p_data saisieBorne(DATATYPE sentinelle){
 }
 
 /**
- * @b Role : qui compte le nombre de monotonies croissantes dans un chaînage terminé par nullptr
+ * @b Role : compter le nombre de monotonies croissantes dans un chaînage terminé par nullptr
  * @param : la tete d'un chainage.
 **/
 int nbCroissance(p_data chain){
@@ -278,7 +279,7 @@ p_data fusion(p_data prem, p_data sec) {
 }
 
 /**
- * @b Role : place dans le chaînage mono la première monotonie croissante de chain et l’en retire
+ * @b Role : placer dans le chaînage mono la première monotonie croissante de chain et l’en retire
  * @param : les tetes des deux chainages. celui de mono et de chain.
 **/
 void extraireCroissance(p_data & chain, p_data & mono) {
@@ -300,7 +301,7 @@ void extraireCroissance(p_data & chain, p_data & mono) {
         
     }
 
-    free(tmp);  
+    free(tmp);  //desallouer le dernier tmp apres la boucle
 
 }
 
@@ -333,7 +334,7 @@ datalistes initT(int nb) {
 }
 
 /**
-* @brief: go to the last unused case whose indixe is nbmono (not (nbmono-1) cuz idixes here start with 0), then put chain in it.
+* @brief: go to the first unused case whose indixe is nbmono (not (nbmono-1) cuz idixes here start with 0), then put chain in it.
 * @b Role: ajoute dans le tableau mono le chaînage chain (dans la prochaine case non utilisée).
 * @PRE: 
 * @POST:
@@ -363,7 +364,8 @@ void affT(datalistes mono){
 }
 
 /**
-* @breif: delete has done by assigning to NULL (malloc intialise to NULL)
+* @breif: delete has done by assigning to nullptr (malloc intialise to NULL)
+* @b Role: supprimer du tableau mono et renvoie le dernier chaînage encore stocké (celui de plus grand indice)
 * @PRE: 
 * @POST:
 * @param : tableau des monotonies
@@ -395,7 +397,7 @@ p_data suppressionTotale(datalistes & mono) {
     for (int i=1;i<(mono.nbmono);i++) { //parcourir la liste
 
         tmp = mono.monotonies[0];
-        while(tmp->suiv != nullptr){ //parcourir la monotonie
+        while(tmp->suiv != nullptr){ //parcourir la monotonie jousqu'a le dernier element
             tmp = tmp->suiv;
         }
 
@@ -411,6 +413,7 @@ p_data suppressionTotale(datalistes & mono) {
         mono.nbmono--;
 
     }
+    free(mono.monotonies);
 
     return chain; 
 
@@ -463,12 +466,12 @@ void trier(datalistes & tabmono){
 
 /**
  * @brief return the chain order by croissant order
- * @b Role: trier un chaînage en utilisant une fusion multiple.
+ * @b Role: trier un chaînage en utilisant la fusion multiple.
  * @PRE:
  * @POST:
  * @param : la tete du chainage
  * */
-void trierCh(p_data & chain){
+void trier(p_data & chain){
 
     cout << "separating monotonies..." << endl;
     datalistes tab = separation(chain);
@@ -478,6 +481,26 @@ void trierCh(p_data & chain){
     chain = suppressionTotale(tab);
 
 }
+
+/**
+ * @brief: 
+ * @b Role: desallouer les maillons du chainage.
+ * @PRE:
+ * @POST:
+ * @param : la tete du chainage
+ * */
+void desallocation(p_data & chain) {
+
+    while (chain != nullptr) {
+
+          p_data  tmp = chain;
+          chain = chain->suiv;
+          free(tmp);
+
+      } 
+
+}
+
 
 //------------------- fin des fonction de monotonie --------------
 //--------------------------------------------------------------------
@@ -600,8 +623,10 @@ int main(){
         cout << "chain : " << endl;
         affCh(chain);
 
-        trierCh(chain);
+        trier(chain);
         cout << "the orderd chain :" << endl;
+        affCh(chain);
+        desallocation(chain);
         affCh(chain);
 
 
