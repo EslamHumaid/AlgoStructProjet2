@@ -6,6 +6,8 @@
  * @b gitHub: https://github.com/EslamHumaid/AlgoStructProjet2.git
 **/
 #include<iostream> // cout, cin
+#include <math.h>  // partie entière (floor)
+#include "outilsmesure.hpp"    // les outils de mesure de temps
 using namespace std;
 
 
@@ -61,7 +63,7 @@ void affCh(p_data chain){
 void ajoutFin(DATATYPE val, p_data & head){
 
     p_data toAdd; // l'element a ajouter; 
-    toAdd = (data*)malloc(sizeof(data));
+    toAdd = new data;
     toAdd->valeur = val;
     toAdd->suiv = nullptr;
 
@@ -94,7 +96,7 @@ void ajoutFin(DATATYPE val, p_data & head){
 p_data ajoutDevant(DATATYPE uneval, p_data chain){
     p_data nouveau; // l'element a ajouter; 
 
-    nouveau = (data*)malloc(sizeof(data));
+    nouveau = new data;
     nouveau->valeur = uneval;
     nouveau->suiv = chain;
 
@@ -114,7 +116,7 @@ p_data saisieNombre(int nb){
     DATATYPE val;
     cout << "Entrez la valeur?" << endl;
     cin >> val; // entrer premiere valeur qui represente la tete. 
-    p_data head = (data*)malloc(sizeof(data)); 
+    p_data head = new data; 
     head->valeur = val;
     head->suiv = nullptr; 
 
@@ -124,7 +126,7 @@ p_data saisieNombre(int nb){
         cout << "Entrez la valeur?" << endl;
         cin >> val; // l'element a ajouter
 
-        tmp->suiv = (data*)malloc(sizeof(data)); 
+        tmp->suiv = new data; 
         tmp->suiv->valeur = val; 
         tmp->suiv->suiv = nullptr;
 
@@ -148,7 +150,7 @@ p_data saisieBorne(DATATYPE sentinelle){
     DATATYPE val;
     cout << "Entrez la valeur?" << endl;
     cin >> val; // entrer premiere valeur qui represente la tete. 
-    p_data head = (data*)malloc(sizeof(data)); 
+    p_data head = new data; 
     head->valeur = val;
 
     p_data tmp = head; // pour ne pas modifier le head
@@ -157,7 +159,7 @@ p_data saisieBorne(DATATYPE sentinelle){
         cout << "Entrez la valeur?" << endl;
         cin >> val; // l'element a ajouter
         
-        tmp->suiv = (data*)malloc(sizeof(data)); 
+        tmp->suiv = new data; 
         tmp->suiv->valeur = val; 
         tmp->suiv->suiv = nullptr;
 
@@ -202,7 +204,7 @@ void removeFirstEle(p_data & chain) { // remove first element of a chaine & retu
     
     p_data exHead = chain; //sauvegarder la tete pour qu'elle soit desallouer apres. 
     chain = chain->suiv;
-    free(exHead);
+    delete(exHead);
 
 }
 
@@ -212,7 +214,7 @@ void removeFirstEle(p_data & chain) { // remove first element of a chaine & retu
 **/
 p_data clone(p_data chain) { 
 
-    p_data tmp = (data*)malloc(sizeof(data));
+    p_data tmp = new data;
     tmp->valeur = chain->valeur; 
     tmp->suiv = chain->suiv; 
 
@@ -225,6 +227,8 @@ p_data clone(p_data chain) {
  * @b Role: fusionne deux chaînages terminés par nullptr, supposés triés par ordre croissant. 
  *          Le résultat obtenu est trié par ordre croissant.
  * @param: les tetes des deux chainages. 
+ * @PRE: prem , sec ordonnee par ordre croissant
+ * @POST: sec est vide, prem continant les valeurs de sec et ordonnee par ordre croissant
 **/
 p_data fusion(p_data prem, p_data sec) { 
 
@@ -259,7 +263,7 @@ p_data fusion(p_data prem, p_data sec) {
                 // ajouter au debut
             } else if ((tmpSec->valeur <= tmpPrem->valeur)) { 
 
-               restChain = tmpSec->suiv;
+                restChain = tmpSec->suiv;
                 tmpSec->suiv = tmpPrem;
                 prem = tmpSec;
                 ok = false;   
@@ -301,7 +305,7 @@ p_data fusion_aux(p_data prem, p_data sec, p_data tmpPrem) {
             sec->suiv = tmpPrem->suiv;
             tmpPrem->suiv = sec;
 
-            fusion_aux(prem,restChain,tmpPrem);
+            return fusion_aux(prem,restChain,tmpPrem);
 
         } else if ((sec->valeur <= prem->valeur)) { 
 
@@ -309,11 +313,11 @@ p_data fusion_aux(p_data prem, p_data sec, p_data tmpPrem) {
             sec->suiv = tmpPrem;
             prem = sec;
 
-            fusion_aux(prem,restChain,tmpPrem);
+            return fusion_aux(prem,restChain,tmpPrem);
 
         }  else { 
 
-            fusion_aux(prem,sec,tmpPrem->suiv); 
+            return fusion_aux(prem,sec,tmpPrem->suiv); 
 
         }     
 
@@ -338,6 +342,8 @@ return fusion_aux(prem,sec,tmpPrem);
 /**
  * @b Role : placer dans le chaînage mono la première monotonie croissante de chain et l’en retire
  * @param : les tetes des deux chainages. celui de mono et de chain.
+ * @PRE: chain pas vide. 
+ * @POST: mono continant la premiere monotonie croissante. chain = chain - premiere monotonie croissante.
 **/
 void extraireCroissance(p_data & chain, p_data & mono) {
 
@@ -350,7 +356,7 @@ void extraireCroissance(p_data & chain, p_data & mono) {
     while( ( (tmp->suiv) != nullptr) && ((tmp->valeur) < (chain->valeur) ) ) { // pour extraire la monotonie
 
        
-        free(tmp);
+        delete(tmp);
         ajoutFin(chain->valeur,mono);
         tmp = clone(chain);
         removeFirstEle(chain);
@@ -358,7 +364,7 @@ void extraireCroissance(p_data & chain, p_data & mono) {
         
     }
 
-    free(tmp);  //desallouer le dernier tmp apres la boucle
+    delete(tmp);  //desallouer le dernier tmp apres la boucle
 
 }
 
@@ -393,8 +399,8 @@ datalistes initT(int nb) {
 /**
 * @brief: go to the first unused case whose indixe is nbmono (not (nbmono-1) cuz idixes here start with 0), then put chain in it.
 * @b Role: ajoute dans le tableau mono le chaînage chain (dans la prochaine case non utilisée).
-* @PRE: 
-* @POST:
+* @PRE: mono deja alloue et chain ne soit pas vide. 
+* @POST: chain est ajoutee dans la derniere case du tableau mono. 
 * @parem: la tete du chainage, tableau des monotonies
 **/
 void ajouterFin(p_data chain,datalistes & mono) {
@@ -423,8 +429,8 @@ void affT(datalistes mono){
 /**
 * @breif: delete has done by assigning to nullptr (malloc intialise to NULL)
 * @b Role: supprimer du tableau mono et renvoie le dernier chaînage encore stocké (celui de plus grand indice)
-* @PRE: 
-* @POST:
+* @PRE: mono pas vide
+* @POST: mono = mono - derniere case
 * @param : tableau des monotonies
 **/
 p_data suppressionFin(datalistes & mono) {
@@ -442,8 +448,8 @@ p_data suppressionFin(datalistes & mono) {
 
 /**
  * @b Role: renvoie un chaînage formé en mettant bout à bout (dans l’ordre) tous les chaînages stockés dans le tableau mono, en les y enlevant
- * @PRE:
- * @POST:
+ * @PRE: mono n'est pas vide.   
+ * @POST: mono vide et desalloué 
  * @param : tableau des monotonies
  * */
 p_data suppressionTotale(datalistes & mono) { 
@@ -480,8 +486,6 @@ p_data suppressionTotale(datalistes & mono) {
 /**
  * @brief: return a tableau with the cases filled with the monotonies of chain
  * @b Role: retournant un tableau dont les cases contiennent (dans l’ordre) les monotonies croissantes du chaînage contenu dans chain
- * @PRE:
- * @POST:
  * @param : la tete du chainage
  * */
 datalistes separation(p_data & chain){
@@ -542,17 +546,16 @@ void trier(p_data & chain){
 /**
  * @brief: 
  * @b Role: desallouer les maillons du chainage.
- * @PRE:
- * @POST:
  * @param : la tete du chainage
- * */
+ * 
+ */
 void desallocation(p_data & chain) {
 
     while (chain != nullptr) {
 
           p_data  tmp = chain;
           chain = chain->suiv;
-          free(tmp);
+          delete(tmp);
 
       } 
 
@@ -607,9 +610,9 @@ int main(){
 */
     
     /*------test p_data fusion(p_data prem, p_data sec) -----*/
-/*    
-        p_data pre = saisieNombre(3); // first chain
-        p_data sec = saisieNombre(3); // second one 
+ /*   
+        p_data pre = saisieNombre(5); // first chain
+        p_data sec = saisieNombre(5); // second one 
 
         cout << "first chain " << endl; 
         affCh(pre); 
@@ -623,8 +626,8 @@ int main(){
 
         cout << "fusion done ! " << endl; 
         affCh(pre); 
-*/
 
+*/
             /* ---- test Monotonies --- */
 
    /*------test initT(), ajouterFin(), affT(), suppressionFin(), suppressionTotale() -----*/
@@ -680,11 +683,17 @@ int main(){
         cout << "chain : " << endl;
         affCh(chain);
 
+        START;
         trier(chain);
+        STOP;
+
         cout << "the orderd chain :" << endl;
         affCh(chain);
         desallocation(chain);
         affCh(chain);
+
+        cout  << "le temps pratique : "<< (long)floor(TEMPS) << endl;
+        cout << "Remarque : temps donnés en 1/" << PRECISION << " secondes " << endl;
 
 
 }
