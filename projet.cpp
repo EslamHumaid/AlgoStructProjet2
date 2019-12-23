@@ -14,7 +14,7 @@ using namespace std;
 /******* constants & structs ******/
 
 
-typedef char DATATYPE;
+typedef string DATATYPE;
 
 //Chaînage
 typedef struct _datum{
@@ -679,7 +679,9 @@ int main(){
 */
     /*------test trierCh(): fonction principale-----*/ 
 
-        p_data chain = saisieNombre(10);
+       
+        
+        p_data chain = saisieNombre(5);
         cout << "chain : " << endl;
         affCh(chain);
 
@@ -697,3 +699,4 @@ int main(){
 
 
 }
+//testing
