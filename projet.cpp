@@ -1,13 +1,13 @@
 /**
  * @file projet.cpp
- * @author BAGHAWITAH Ahmed, HUMAID Eslam
+ * @author BAGHAWITAH Ahmed, HUMAID Eslam Groupe 384J
  * @date 14/12/2019 Création
  * @brief un algorithme de tri par fusion multiple de monotonies
  * @b gitHub: https://github.com/EslamHumaid/AlgoStructProjet2.git
 **/
 #include<iostream> // cout, cin
 #include <math.h>  // partie entière (floor)
-#include "outilsmesure.hpp"    // les outils de mesure de temps
+#include "outilsmesure.hpp"    // les outils de mesure de temps pour calculer le temps pratique
 using namespace std;
 
 
@@ -685,6 +685,7 @@ int main(){
         cout << "chain : " << endl;
         affCh(chain);
 
+        //Calcule de temps pratique de la fonction trier()
         START;
         trier(chain);
         STOP;
@@ -699,4 +700,3 @@ int main(){
 
 
 }
-//testing
